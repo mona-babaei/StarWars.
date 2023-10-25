@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Wars Biometrics</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="input-group mb-3">
+                    <input type="text" id="characterName" class="form-control" placeholder="Enter character name" aria-label="Character Name" aria-describedby="button-addon2">
+                    <button class="btn btn-primary" type="button" id="searchButton">Search</button>
+                </div>
+                <textarea id="output" class="form-control" rows="5" readonly></textarea>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function getApi() {
+            const name = document.getElementById('characterName').value;
+            const fullUri = `https://www.swapi.tech/api/people/?name=${name}`;
+
+            fetch(fullUri)
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data);
+                    if (data && data.result && data.result[0]) {
+                        const character = data.result[0].properties;
+                        const outputText = `Name: ${character.name}\nHeight: ${character.height} cm\nMass: ${character.mass} kg\nGender: ${character.gender}\nHair color: ${character.hair_color}`;
+                        document.getElementById('output').value = outputText;
+                    } else {
+                        console.log('No data found');
+                    }
+                })
+                .catch(err => console.log(err));
+        }
+
+        document.getElementById('searchButton').addEventListener('click', getApi);
+    </script>
+</body>
+</html>
